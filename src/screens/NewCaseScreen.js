@@ -1,10 +1,12 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import NewCaseForm from '../components/NewCaseForm';
 
 export default function NewCaseScreen() {
   return (
     <View style={styles.container}>
-      <Text>Novo Caso</Text>
+      
+      <NewCaseForm />
     </View>
   );
 }
