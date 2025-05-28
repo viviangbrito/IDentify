@@ -1,116 +1,137 @@
-import React, { useState } from 'react';
-import { View, ScrollView, StyleSheet, Text, TouchableOpacity, FlatList } from 'react-native';
-import { TextInput, Button, Menu, Provider, IconButton } from 'react-native-paper';
-import * as DocumentPicker from 'expo-document-picker';
-import * as ImagePicker from 'expo-image-picker';
+import React, { useState, useEffect } from 'react';
+import { ScrollView, View, StyleSheet } from 'react-native';
+import { TextInput, IconButton } from 'react-native-paper';
+import StatusMenu from '../components/StatusMenu';
+import EvidencesSection from './EvidencesSection';
 
 export default function NewCaseForm() {
+
   const [status, setStatus] = useState('Em andamento');
-  const [statusMenuVisible, setStatusMenuVisible] = useState(false);
-  const [evidencias, setEvidencias] = useState([]);
-  const [titulo, setTitulo] = useState('');
-  const [descricao, setDescricao] = useState('');
-
-  const handlePickFile = async () => {
-    const result = await DocumentPicker.getDocumentAsync({ type: '*/*' });
-    if (!result.canceled) {
-      setEvidencias([...evidencias, result.assets[0]]);
-    }
-  };
-
-  const handleTakePhoto = async () => {
-    const permission = await ImagePicker.requestCameraPermissionsAsync();
-    if (permission.status === 'granted') {
-      const photo = await ImagePicker.launchCameraAsync();
-      if (!photo.canceled) {
-        setEvidencias([...evidencias, photo.assets[0]]);
-      }
-    } else {
-      alert('Permissão de câmera negada.');
-    }
-  };
-
-  const handleSalvar = () => {
-    // Aqui você poderá integrar com o banco futuramente
-    console.log('Salvando caso:', { titulo, descricao, status, evidencias });
-  };
 
   return (
-    <Provider>
-      <ScrollView contentContainerStyle={styles.container}>
-        <Text>Título:</Text>
-        <TextInput value={titulo} onChangeText={setTitulo} style={styles.input} mode="outlined" />
-
-        <Text>Descrição:</Text>
-        <TextInput
-          value={descricao}
-          onChangeText={setDescricao}
-          style={[styles.input, { height: 80 }]}
-          mode="outlined"
-          multiline
+  <ScrollView contentContainerStyle={styles.scrollContainer}>
+  <View style={styles.NewCaseContainer}>
+    <View style={styles.CaseInfo}>
+      <TextInput
+        label="Título:"
+        mode="outlined"
+        style={[styles.Input, {borderColor: '#002b4e' }]}
+            outlineColor="#002b4e"
+            activeOutlineColor="#002b4e"
+      />
+      <TextInput
+        label="Descrição:"
+        mode="outlined"
+        style={[styles.Input, {borderColor: '#002b4e' }]}
+            outlineColor="#002b4e"
+            activeOutlineColor="#002b4e"
+        multiline
+        numberOfLines={4}
         />
-
-        <Text>Status:</Text>
-        <Menu
-          visible={statusMenuVisible}
-          onDismiss={() => setStatusMenuVisible(false)}
-          anchor={
-            <Button mode="outlined" onPress={() => setStatusMenuVisible(true)}>
-              {status}
-            </Button>
-          }>
-          <Menu.Item onPress={() => setStatus('Em andamento')} title="Em andamento" />
-          <Menu.Item onPress={() => setStatus('Finalizado')} title="Finalizado" />
-          <Menu.Item onPress={() => setStatus('Arquivado')} title="Arquivado" />
-        </Menu>
-
-        <View style={styles.buttonRow}>
-          <Button icon="camera" mode="outlined" onPress={handleTakePhoto}>
-            Tirar foto
-          </Button>
-          <Button icon="file" mode="outlined" onPress={handlePickFile}>
-            Arquivo
-          </Button>
+          <StatusMenu status={status} setStatus={setStatus} />
+          <TextInput
+            label="Data de ocorrência:"
+            mode="outlined"
+            keyboardType="numeric"
+            style={[styles.Input, {borderColor: '#002b4e' }]}
+            outlineColor="#002b4e"
+            activeOutlineColor="#002b4e"
+          />
+        
+        <View style={styles.divider}>
+          <TextInput
+            label="Data de abertura:"
+            mode="outlined"
+            keyboardType="numeric"
+            style={[styles.InputDivider, {borderColor: '#002b4e' }]}
+            outlineColor="#002b4e"
+            activeOutlineColor="#002b4e"
+          />
+          <TextInput
+            label="Data de fechamento:"
+            mode="outlined"
+            style={[styles.InputDivider, {borderColor: '#002b4e' }]}
+            outlineColor="#002b4e"
+            activeOutlineColor="#002b4e"
+            keyboardType="numeric"
+          />
         </View>
-
-        {evidencias.map((item, index) => (
-          <View key={index} style={styles.evidenceItem}>
-            <Text numberOfLines={1} style={{ flex: 1 }}>{item.name || `Foto ${index + 1}`}</Text>
-            <IconButton icon="close" onPress={() => {
-              setEvidencias(evidencias.filter((_, i) => i !== index));
-            }} />
-          </View>
-        ))}
-
-        <Button icon="content-save" mode="contained" onPress={handleSalvar} style={{ marginTop: 20 }}>
-          Salvar caso
-        </Button>
-      </ScrollView>
-    </Provider>
-  );
+    </View>
+    <View style={styles.PacienteInfo}>
+      <TextInput
+        label="Nome do paciente:"
+        mode="outlined"
+        style={[styles.Input, {borderColor: '#002b4e' }]}
+            outlineColor="#002b4e"
+            activeOutlineColor="#002b4e"
+      />
+      <View style={styles.divider}>
+        <TextInput
+        label="CPF:"
+        mode="outlined"
+        style={[styles.InputDivider, {borderColor: '#002b4e' }]}
+            outlineColor="#002b4e"
+            activeOutlineColor="#002b4e"
+        keyboardType="numeric"
+        />
+        <TextInput
+          label="RG:"
+          mode="outlined"
+          style={[styles.InputDivider, {borderColor: '#002b4e' }]}
+            outlineColor="#002b4e"
+            activeOutlineColor="#002b4e"
+          keyboardType="numeric"
+        />
+      </View>
+    </View>
+    <View style={styles.ExtraInfo}>
+      <EvidencesSection />
+    </View>
+  </View>
+  </ScrollView>
+  )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 16,
-    backgroundColor: '#d8c8b8',
-    borderRadius: 20,
+  NewCaseContainer: {
+    zIndex: 1,
+    margin: 20,
+    padding: 15,
+    backgroundColor: '#e6ddd3',
+    borderRadius: 10,
+    width: '90%',
   },
-  input: {
-    backgroundColor: '#f6f4f2',
-    marginBottom: 12,
+  CaseInfo: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#002b4e',
+    paddingBottom: 20,
   },
-  buttonRow: {
+  PacienteInfo: {
+    paddingBottom: 20,
+    paddingTop: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#002b4e',
+  },
+  ExtraInfo: {
+    marginBottom: 20,
+  },
+  Input: {
+    flex: 1,
+    marginBottom: 15,
+    borderRadius: 15,
+  },
+  InputDivider: {
+    flex: 1,
+    marginBottom: 15,
+    borderRadius: 15,
+  },
+  divider: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginVertical: 16,
+    gap: 15,
   },
-  evidenceItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    borderRadius: 6,
-    paddingHorizontal: 10,
-    marginVertical: 4,
+  scrollContainer: {
+    paddingBottom: 10,
+    flex: 1,
   },
 });
