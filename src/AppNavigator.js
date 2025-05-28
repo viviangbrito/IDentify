@@ -15,13 +15,25 @@ export default function AppNavigator() {
         tabBarStyle: {
           backgroundColor: '#e6ddd3',
           borderRadius: 20,
-          height: 70,
-          margin: 20,
+          height: 80,
+          marginHorizontal: 20,
+          marginBottom: 35,
+          position: 'absolute', 
+          shadowColor: '#3C260D',
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.1,
+          shadowRadius: 8,
+          elevation: 5,
+        },
+        tabBarItemStyle: {
+        justifyContent: 'center', // Centraliza verticalmente o ícone e o texto
+        alignItems: 'center',
         },
         tabBarLabelStyle: {
-          fontSize: 12,
+        fontSize: 12,
+        paddingTop: 2, // espaço entre ícone e texto
         },
-        tabBarActiveTintColor: '#002b4e',
+        tabBarActiveTintColor: '#144C7A',
         tabBarInactiveTintColor: '#002b4e',
       }}
     >
@@ -55,4 +67,3 @@ export default function AppNavigator() {
     </Tab.Navigator>
   );
 }
-

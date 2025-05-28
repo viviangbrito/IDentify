@@ -20,10 +20,15 @@ export default function StatusMenu({ status, setStatus }) {
         visible={visible}
         onDismiss={closeMenu}
         anchor={
-          <Button mode="outlined" onPress={openMenu} style={styles.menuButton}>
+          <Button mode="outlined" 
+          onPress={openMenu}           
+          contentStyle={{ borderColor: '#123458', backgroundColor: '#f6f4f2' }}
+          labelStyle={{ color: '#144C7A' }}
+          > 
             {status || 'Selecionar status'}
           </Button>
-        }>
+        }
+        >
         <Menu.Item onPress={() => handleSelect('Em andamento')} title="Em andamento" />
         <Menu.Item onPress={() => handleSelect('Finalizado')} title="Finalizado" />
         <Menu.Item onPress={() => handleSelect('Arquivado')} title="Arquivado" />
@@ -38,8 +43,10 @@ const styles = StyleSheet.create({
     zIndex: 1, // para garantir que o menu apareça por cima
   },
   label: {
-    fontSize: 16,
+    fontSize: 12,
     marginBottom: 4,
+    borderColor: '#123458',
+    color: '#123458',
   },
   menuButton: {
     backgroundColor: '#f6f4f2',

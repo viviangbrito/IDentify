@@ -15,42 +15,45 @@ export default function EvidencesSection() {
     const { status: mediaStatus } = await MediaLibrary.requestPermissionsAsync();
 
     if (cameraStatus !== 'granted' || mediaStatus !== 'granted') {
-      Alert.alert('Permissão necessária', 'Precisamos de acesso à câmera e à galeria.');
-      return false;
+        Alert.alert('Permissão necessária', 'Precisamos de acesso à câmera e à galeria.');
+        return false;
     }
     return true;
-  };
+};
 
-  const handleAddEvidence = async () => {
+const handleAddEvidence = async () => {
     const granted = await askPermissions();
     if (!granted) return;
 
     Alert.alert(
-      'Adicionar evidência',
-      'Escolha uma opção:',
-      [
+    'Adicionar evidência',
+    'Escolha uma opção:',
+    [
         {
-          text: 'Tirar foto',
-          onPress: async () => {
+        text: 'Tirar foto',
+        onPress: async () => {
             const result = await ImagePicker.launchCameraAsync({ base64: false });
             if (!result.canceled) {
-              setEvidences([...evidences, { name: 'Foto tirada', uri: result.assets[0].uri }]);
+                setEvidences([...evidences, { name: 'Foto tirada', uri: result.assets[0].uri }]);
             }
-          }
+        }
         },
         {
-          text: 'Selecionar arquivo',
-          onPress: async () => {
-            const result = await DocumentPicker.getDocumentAsync({ type: ['image/*', 'application/pdf'] });
-            if (result.type === 'success') {
-              setEvidences([...evidences, { name: result.name, uri: result.uri }]);
+        text: 'Selecionar arquivo',
+        onPress: async () => {
+            const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            base64: false,
+            });
+            if (!result.canceled) {
+            setEvidences([...evidences, { name: 'Imagem da galeria', uri: result.assets[0].uri }]);
             }
-          }
-        },
-        { text: 'Cancelar', style: 'cancel' }
-      ]
-    );
-  };
+                    }
+                    },
+                    { text: 'Cancelar', style: 'cancel' }
+                ]
+                );
+            };
 
   const handleGetLocation = async () => {
     const { status } = await Location.requestForegroundPermissionsAsync();
@@ -89,7 +92,7 @@ export default function EvidencesSection() {
         <Button
           icon="map-marker"
           mode="outlined"
-          style={styles.actionButton}
+          style={[styles.actionButton, { backgroundColor: '#f6f4f2' }]}
           labelStyle={styles.buttonLabel}
           onPress={handleGetLocation}
         >
@@ -98,11 +101,11 @@ export default function EvidencesSection() {
         <Button
           icon="paperclip"
           mode="outlined"
-          style={styles.actionButton}
+          style={[styles.actionButton, { backgroundColor: '#f6f4f2' }]}
           labelStyle={styles.buttonLabel}
           onPress={handleAddEvidence}
         >
-          Evidencias
+          Evidências
         </Button>
       </View>
 
@@ -138,23 +141,25 @@ const styles = StyleSheet.create({
   },
   buttonRow: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     marginBottom: 20,
   },
   actionButton: {
     borderColor: '#002b4e',
-    borderWidth: 1.5,
-    borderRadius: 10,
+    borderWidth: 1,
+    borderRadius: 8,
+    backgroundColor: '#e6ddd3',
   },
   buttonLabel: {
     color: '#002b4e',
     fontWeight: 'bold',
+    fontSize: 14,
+    
   },
   evidenceList: {
     marginVertical: 10,
   },
   evidenceItem: {
-    backgroundColor: '#fff',
     borderRadius: 10,
     padding: 10,
     marginBottom: 8,
